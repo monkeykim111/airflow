@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.operators.bash import BaseOperator
+from airflow.operators.bash import BashOperator  # 수정된 부분
 import pendulum
 
 with DAG(
@@ -8,12 +8,12 @@ with DAG(
     start_date=pendulum.datetime(2024, 3, 1, tz="Asia/Seoul"),
     catchup=False
 ) as dag:
-    bash_t1 = BaseOperator(
+    bash_t1 = BashOperator(
         task_id='bash_t1',
         bash_command='echo "data_interval_end: {{ data_interval_end }}"'
     )
 
-    bash_t2 = BaseOperator(
+    bash_t2 = BashOperator(
         task_id='bash_t2',
         env={
             'START_DATE':'{{data_interval_start | ds}}',
