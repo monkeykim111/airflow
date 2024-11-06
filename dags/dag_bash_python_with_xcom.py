@@ -39,7 +39,7 @@ with DAG(
     def python_pull_xcom(**kwargs):
         ti = kwargs['ti']  # kwargs에 있는 ti 인스턴스 가져오기
         status_value = ti.xcom_pull(key='bash_pushed')
-        return_value = ti.xcom_pull(task_ids='bash_push')
+        return_value = ti.xcom_pull(task_ids='bash_push')  # task_ids로 xcom pull하므로 return 값으로 들어온 bash operator의 마지막 출력문이 value로 들어온다.
         print('status_value:' + str(status_value))
         print('return_value:' + return_value)
 
