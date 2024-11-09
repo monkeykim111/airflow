@@ -17,7 +17,8 @@ with DAG(
 
     @task_group(group_id='first_group')
     def group_1():
-        ''' task group 데코레이터를 사용한 첫번째 그룹입니다. '''  # task group 데코레이션에서 입력한 docstring은 task group의 tooltip으로서 설명을 제공한다.
+        """task group 데코레이터를 사용한 첫번째 그룹입니다."""
+        # task group 데코레이션에서 입력한 docstring은 task group의 tooltip으로서 설명을 제공한다.
 
         @task(task_id='inner_func1')  
         def inner_func1(**kwargs):
