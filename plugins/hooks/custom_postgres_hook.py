@@ -26,7 +26,12 @@ class CustomPostgresHook(BaseHook):
         self.get_conn()
         header = 0 if is_header else None # is_header = true면 0, false면 None
         if_exists = 'replace' if is_replace else 'append' # is_replace = true면 replace, false면 append
-        file_df = pd.read_csv(file_name, header=header, delimiter=delimiter)
+        
+        try:
+            file_df = pd.read_csv(file_name, header=header, delimiter=delimiter, encoding='utf-8')
+        except UnicodeDecodeError:
+            self.log.info("UTF-8 인코딩 실패. EUC-KR로 재시도합니다.")
+            file_df = pd.read_csv(file_name, header=header, delimiter=delimiter, encoding='euc-kr')
 
         for col in file_df.columns:
             try:
