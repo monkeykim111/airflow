@@ -12,7 +12,7 @@ class CustomPostgresHook(BaseHook):
         self.host = airflow_conn.host
         self.user = airflow_conn.login
         self.password = airflow_conn.password
-        self.dbname = airflow_conn.database
+        self.dbname = airflow_conn.schema
         self.port = airflow_conn.port
 
         self.postgres_conn = psycopg2.connect(host=self.host, user=self.user, password=self.password, dbname=self.dbname, port=self.port)
