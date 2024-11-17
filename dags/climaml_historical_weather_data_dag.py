@@ -17,8 +17,8 @@ with DAG(
     dag_id='climaml_historical_weather_data_dag',
     default_args= default_args,
     description='10년치 여러 관측소에서의 기상 데이터를 fetch하여 Postgresq DB에 적재합니다.',
-    schedule_interval='@daily',
-    start_date=datetime(2024, 11, 18, tzinfo=local_tz),
+    schedule="30 6 * * *",
+    start_date=pendulum.datetime(2024, 11, 18, tz="Asia/Seoul"),
     catchup=False) as dag:
 
 
