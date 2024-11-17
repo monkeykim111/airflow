@@ -12,6 +12,7 @@ def fetch_weather_data(params_base, station_ids, url):
         if response.status_code == 200:
             print(f"[INFO] Successfully fetched data for station {station_id}.")
             data = response.json()
+            print(f"[INFO] data is {data}")
             items = data['response']['body']['items']['item']
             filtered_data = [
                 {new_key: item.get(old_key, None) for old_key, new_key in SELECTED_COLUMNS.items()}
