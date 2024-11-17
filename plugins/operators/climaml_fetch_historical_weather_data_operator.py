@@ -1,5 +1,5 @@
 from airflow.models import BaseOperator
-from airflow.decorators import apply_defaults
+from airflow.utils.decorators import apply_defaults
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.models import Variable
 from common.climaml_data_utils import fetch_weather_data
