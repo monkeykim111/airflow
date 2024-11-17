@@ -40,7 +40,7 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
                 break
 
             end_of_period = min(current_start.add(days=90), current_end)  # pendulum의 add()로 90일 추가
-
+            
             # 요청할 파라미터
             params_base = {
                 'serviceKey': api_key,
@@ -61,7 +61,7 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
             # 데이터 중복 제거
             df = df.drop_duplicates()
             df.replace("", np.nan, inplace=True)
-            df.to_sql('weather_data', engine, if_exists='append', index=False)
+            df.to_sql('clima_ml_weather_data', engine, if_exists='append', index=False)
 
             self.log.info(f"[INFO] Inserted data into DB for range {current_start.format('YYYY-MM-DD')} to {end_of_period.format('YYYY-MM-DD')}.")
             current_start = end_of_period.add(days=1)  # 다음 구간 시작 날짜로 이동
