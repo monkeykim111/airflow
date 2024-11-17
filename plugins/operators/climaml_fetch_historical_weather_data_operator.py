@@ -45,7 +45,7 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
             params_base = {
                 'serviceKey': api_key,
                 'pageNo': '1',
-                'numOfRows': '999',
+                'numOfRows': '900',
                 'dataType': 'JSON',
                 'dataCd': 'ASOS',
                 'dateCd': 'DAY',
