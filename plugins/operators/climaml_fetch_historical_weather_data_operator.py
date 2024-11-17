@@ -1,5 +1,4 @@
 from airflow.models import BaseOperator
-from airflow.utils.decorators import apply_defaults
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.models import Variable
 from common.climaml_data_utils import fetch_weather_data
@@ -8,7 +7,6 @@ import pandas as pd
 import numpy as np
 
 class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
-    @apply_defaults
     def __init__(self, conn_id, end_date, station_ids, **kwargs):
         super().__init__(**kwargs)
         self.conn_id = conn_id
