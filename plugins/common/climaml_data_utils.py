@@ -26,6 +26,7 @@ def fetch_weather_data(params_base, station_ids, url):
                 data = response.json()
             except ValueError as e:
                 print(f"[ERROR] Failed to decode JSON for station {station_id}, page {page}: {e}")
+                print(response)
                 break  # 현재 관측소의 반복 종료, 다음 관측소로 이동
 
             items = data.get('response', {}).get('body', {}).get('items', {}).get('item', [])
