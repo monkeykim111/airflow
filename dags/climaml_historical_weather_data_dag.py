@@ -15,7 +15,7 @@ with DAG(
     default_args= default_args,
     description='10년치 여러 관측소에서의 기상 데이터를 fetch하여 Postgresq DB에 적재합니다.',
     schedule="30 6 * * *",
-    start_date=pendulum.datetime(2024, 11, 18, tz="Asia/Seoul"),
+    start_date=pendulum.datetime(2024, 11, 15, tz="Asia/Seoul"),
     catchup=False) as dag:
 
 
