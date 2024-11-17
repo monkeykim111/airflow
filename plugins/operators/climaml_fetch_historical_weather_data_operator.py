@@ -5,6 +5,7 @@ from common.climaml_data_utils import fetch_weather_data
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
+import pendulum
 
 class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
     def __init__(self, conn_id, end_date, station_ids, **kwargs):
@@ -18,15 +19,17 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
         postgres_hook = PostgresHook(postgres_conn_id=self.conn_id)
         api_key = Variable.get("data_go_kr")  # variable에서 data_go_kr의 value가져옴
         url = 'http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList'  # 요청할 url
+        local_tz = pendulum.timezone("Asia/Seoul")
 
         # variable에 last_processed_date 변수가 있는지 확인, 없으면 default_var가 None이므로 그것을 반환
         # 일일 트래픽이 10000건 이므로, 여러 관측소에서 10년치의 데이터를 요청해야 하는 상황이므로
         # 일일 트래픽이 넘은 경우, 다음날 저장된 date에서부터 다시 요청을 진행하기 위한 변수
-        last_processed_date = Variable.get('last_processed_date', default_var=None)
+        last_processed_date = Variable.get("last_processed_date", default_var=None)
         if last_processed_date:
-            current_start = datetime.strptime(last_processed_date, '%Y-%m-%d') + timedelta(days=1)
+            current_start = datetime.strptime(last_processed_date, '%Y-%m-%d')
+            current_start = current_start.replace(tzinfo=local_tz)
         else:
-            current_start = datetime.strptime('2014-11-17', '%Y-%m-%d')
+            current_start = datetime(2014, 11, 17, tzinfo=local_tz)
         current_end = datetime.strptime(self.end_date, '%Y-%m-%d')
 
         engine = postgres_hook.get_sqlalchemy_engine()

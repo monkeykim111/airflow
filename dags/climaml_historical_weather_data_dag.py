@@ -3,9 +3,6 @@ from datetime import datetime, timedelta
 from operators.climaml_fetch_historical_weather_data_operator import ClimamlFetchHistoricalWeatherDataOperator
 import pendulum
 
-# 타임존 설정
-local_tz = pendulum.timezone("Asia/Seoul")
-
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
