@@ -45,7 +45,7 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
             params_base = {
                 'serviceKey': api_key,
                 'pageNo': '1',
-                'numOfRows': '900',
+                'numOfRows': '999',
                 'dataType': 'JSON',
                 'dataCd': 'ASOS',
                 'dateCd': 'DAY',
@@ -58,6 +58,8 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
             request_count += len(self.station_ids)
 
             self.log.info(f"[INFO] Processing data from {current_start.format('YYYY-MM-DD')} to {end_of_period.format('YYYY-MM-DD')}.")
+            # 데이터 중복 제거
+            df = df.drop_duplicates()
             df.replace("", np.nan, inplace=True)
             df.to_sql('weather_data', engine, if_exists='append', index=False)
 
