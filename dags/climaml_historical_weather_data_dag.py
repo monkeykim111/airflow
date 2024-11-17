@@ -18,12 +18,29 @@ with DAG(
     start_date=pendulum.datetime(2024, 11, 15, tz="Asia/Seoul"),
     catchup=False) as dag:
 
+    # 관측소 번호와 이름
+    station_ids = [
+        '108',  # 서울
+        '105',  # 강릉
+        '114',  # 원주
+        '112',  # 인천
+        '119',  # 수원
+        '127',  # 충주
+        '131',  # 청주
+        '137',  # 상주
+        '283',  # 경주
+        '146',  # 전주
+        '247',  # 남원
+        '184',  # 제주
+        '189',  # 서귀포
+    ]
 
     climaml_fetch_historical_data = ClimamlFetchHistoricalWeatherDataOperator(
         task_id='climaml_fetch_historical_data',
         conn_id='conn-db-postgres-custom',
+        start_date='2014-11-17',
         end_date='2024-11-16',
-        station_ids=['108', '105', '114', '112', '119', '127', '131', '137', '283', '146', '247', '184', '189']
+        station_ids=station_ids,
     )
 
     climaml_fetch_historical_data
