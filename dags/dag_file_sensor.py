@@ -12,7 +12,7 @@ with DAG(
     rainfall_sensor = FileSensor(
         task_id='rainfall_sensor',
         fs_conn_id='conn_file_airflow_files',
-        filepath='ListRainfallService/istRainfallService.csv',
+        filepath='ListRainfallService/ListRainfallService.csv',
         recursive=False,
         poke_interval=60,
         timeout=60*60*24,
