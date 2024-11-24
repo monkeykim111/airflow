@@ -7,6 +7,9 @@ import pandas as pd
 import numpy as np
 
 class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
+    # 템플릿 필드 등록
+    template_fields = ('start_date', 'end_date')
+
     def __init__(self, conn_id, start_date, end_date, station_ids, **kwargs):
         super().__init__(**kwargs)
         self.conn_id = conn_id
