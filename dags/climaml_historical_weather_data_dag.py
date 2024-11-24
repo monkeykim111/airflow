@@ -38,7 +38,5 @@ with DAG(
     climaml_fetch_historical_data = ClimamlFetchHistoricalWeatherDataOperator(
         task_id='climaml_fetch_historical_data',
         conn_id='conn-db-postgres-custom',
-        start_date="{{ execution_date.strftime('%Y-%m-%d') }}",
-        end_date="{{ execution_date.strftime('%Y-%m-%d') }}",
         station_ids=station_ids,
     )

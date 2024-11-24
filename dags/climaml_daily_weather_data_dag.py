@@ -1,5 +1,5 @@
 from airflow import DAG
-from datetime import timedelta
+from datetime import datetime, timedelta
 from operators.climaml_fetch_historical_weather_data_operator import ClimamlFetchHistoricalWeatherDataOperator
 from sensors.climaml_data_sensor import ClimamlDataSensor
 import pendulum
@@ -51,8 +51,6 @@ with DAG(
     climaml_fetch_daily_data = ClimamlFetchHistoricalWeatherDataOperator(
         task_id='climaml_fetch_daily_data',
         conn_id='conn-db-postgres-custom',
-        start_date="{{ (execution_date - macros.timedelta(days=1)).strftime('%Y-%m-%d') }}",
-        end_date="{{ (execution_date - macros.timedelta(days=1)).strftime('%Y-%m-%d') }}",
         station_ids=station_ids,
     )
 
