@@ -14,9 +14,14 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
         self.station_ids = station_ids
 
     def execute(self, context):
-        # Airflow context에서 execution_date 가져오기
-        execution_date = context['execution_date']
-        start_date = execution_date.subtract(days=1).strftime('%Y-%m-%d')
+        # Airflow context에서 logical_date 가져오기
+        logical_date = context['logical_date']
+        data_interval_start = context['data_interval_start']
+        data_interval_end = context['data_interval_end']
+        print(f"Logical Date: {logical_date}")
+        print(f"Data Interval Start: {data_interval_start}")
+        print(f"Data Interval End: {data_interval_end}")
+        start_date = logical_date.subtract(days=1).strftime('%Y-%m-%d')
         end_date = start_date  # 동일한 날짜 사용
 
         # PostgreSQL 연결 설정
