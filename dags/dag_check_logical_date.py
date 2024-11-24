@@ -7,6 +7,8 @@ def check_context(**kwargs):
     context = kwargs
     if 'logical_date' in context:
         context['ti'].log.info(f"[INFO] logical_date: {context['logical_date']}")
+        start_date = context['logical_date'].subtract(days=1).strftime('%Y-%m-%d')
+        context['ti'].log.info(start_date)
     else:
         context['ti'].log.error("[ERROR] logical_date not found in context!")
 
