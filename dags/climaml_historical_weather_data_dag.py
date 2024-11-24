@@ -38,8 +38,8 @@ with DAG(
     climaml_fetch_historical_data = ClimamlFetchHistoricalWeatherDataOperator(
         task_id='climaml_fetch_historical_data',
         conn_id='conn-db-postgres-custom',
-        start_date='2014-11-17',
-        end_date='2024-11-16',
+        start_date='2024-11-17',
+        end_date='2024-11-23',
         station_ids=station_ids,
     )
 
