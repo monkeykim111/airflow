@@ -8,39 +8,40 @@ import numpy as np
 
 
 class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
-    template_fields = ('start_date', 'end_date')  # 템플릿 필드 등록
-
-    def __init__(self, conn_id, start_date, end_date, station_ids, **kwargs):
+    def __init__(self, conn_id, station_ids, **kwargs):
         super().__init__(**kwargs)
         self.conn_id = conn_id
-        self.start_date = start_date
-        self.end_date = end_date
         self.station_ids = station_ids
 
     def execute(self, context):
-        # 템플릿 문자열을 pendulum datetime으로 변환
-        try:
-            start_date = pendulum.parse(self.start_date)
-            end_date = pendulum.parse(self.end_date)
-        except Exception as e:
-            self.log.error(f"날짜 변환 중 오류 발생: {e}")
-            raise
+        # Airflow context에서 execution_date 가져오기
+        execution_date = context['execution_date']
+        start_date = execution_date.subtract(days=1).strftime('%Y-%m-%d')
+        end_date = start_date  # 동일한 날짜 사용
 
+        # PostgreSQL 연결 설정
         postgres_hook = PostgresHook(postgres_conn_id=self.conn_id)
         engine = postgres_hook.get_sqlalchemy_engine()
 
-        current_start = start_date
+        # API 기본 설정
+        api_key = Variable.get("data_go_kr")
+        url = 'http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList'
+
+        current_start = pendulum.parse(start_date)
+        current_end = pendulum.parse(end_date)
+
         request_count = 0
         max_requests_per_day = 10000
 
-        while current_start <= end_date:
+        while current_start <= current_end:
             if request_count >= max_requests_per_day:
                 self.log.info("일일 최대 API 요청 수에 도달했습니다. 동작을 중단합니다.")
                 break
 
-            end_of_period = min(current_start.add(days=90), end_date)
+            end_of_period = min(current_start.add(days=90), current_end)
+
             params_base = {
-                'serviceKey': Variable.get("data_go_kr"),
+                'serviceKey': api_key,
                 'pageNo': '1',
                 'numOfRows': '999',
                 'dataType': 'JSON',
@@ -51,18 +52,17 @@ class ClimamlFetchHistoricalWeatherDataOperator(BaseOperator):
             }
 
             try:
-                df = fetch_weather_data(params_base=params_base, station_ids=self.station_ids, url='http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList')
+                df = fetch_weather_data(params_base=params_base, station_ids=self.station_ids, url=url)
                 request_count += len(self.station_ids)
                 df = df.drop_duplicates()
                 df.replace("", np.nan, inplace=True)
                 df.to_sql('clima_ml_weather_data', engine, if_exists='append', index=False)
 
                 self.log.info(f"Inserted data for range {current_start.format('YYYY-MM-DD')} to {end_of_period.format('YYYY-MM-DD')}.")
-
             except Exception as e:
                 self.log.error(f"데이터 처리 중 오류 발생: {e}")
                 break
 
             current_start = end_of_period.add(days=1)
 
-        self.log.info(f"Completed processing data from {start_date.format('YYYY-MM-DD')} to {end_date.format('YYYY-MM-DD')}.")
+        self.log.info(f"Completed processing data from {start_date} to {end_date}.")
