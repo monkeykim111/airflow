@@ -51,8 +51,8 @@ with DAG(
     climaml_fetch_daily_data = ClimamlFetchHistoricalWeatherDataOperator(
         task_id='climaml_fetch_daily_data',
         conn_id='conn-db-postgres-custom',
-        start_date="{{ (execution_date - macros.timedelta(days=1)).strftime('%Y-%m-%d') }}",
-        end_date="{{ (execution_date - macros.timedelta(days=1)).strftime('%Y-%m-%d') }}",
+        start_date="{{ (execution_date - macros.timedelta(days=1)) }}",
+        end_date="{{ (execution_date - macros.timedelta(days=1)) }}",
         station_ids=station_ids,
     )
 
