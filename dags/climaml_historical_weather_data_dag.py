@@ -43,8 +43,6 @@ with DAG(
         station_ids=station_ids,
     )
 
-    climaml_fetch_historical_data
-
 
 
 
